@@ -1,0 +1,202 @@
+<html>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<head>
+<script>
+function binaryTable() {
+    let result = ['01000001']
+    let alfabet = 'abcdefghijklmnopqrstuvwxyz'
+    for (let i = 1; i < 26; i++) {
+        let last = result[result.length - 1]
+        let zeroIndex = last.lastIndexOf('0') // 6 
+        let next = '1'
+        for (let i2 = 1; i2 <= 8 - zeroIndex - 1; i2++) {
+            next += '0'
+        }
+        last = [...last]
+        last.splice(8 - next.length, next.length)
+        last = [...last, ...next].join('')
+        result.push(last)
+    }
+    let obj = {}
+    for (let code of result) {
+        let index = result.indexOf(code)
+        obj[alfabet[index]] = code
+    }
+    return obj
+}
+console.log(binaryTable())
+
+function scramble(str) {
+    let result = ''
+    let word = [...str]
+    for (let i = 0; i < str.length; i++) {
+        let char = word[Math.floor(Math.random() * word.length)]
+        result += char
+        word.splice(word.indexOf(char), 1)
+    }
+    return result
+}
+console.log(scramble('anagrama'))
+
+function morseToText(code) {
+    if (typeof code == 'string') {
+        if (code.toLowerCase() == 'help') {
+            console.warn(`The code is a string composed just with - (lines), . (dots), and / (slashes). 
+            Each letter has a especific morse code, you separate letters with spaces and words with slashes. 
+            The function only translates alfabet letters at the moment, so special characters aren't going to be translated,
+            maybe in an update ;). Be sure to put slash between two spaces.`
+            )
+            return
+        }
+        let acceptedChars = '-. /'
+        let result = ''
+        for (let char of code) {
+            if (!acceptedChars.includes(char)) {
+                console.warn('The passed code has not accepted characters. Enter "help" for informations.')
+                return
+            }
+        }
+        let codes = {
+            '.-': 'A', '-...': 'B', '-.-.': 'C','-..': 'D',
+            '.': 'E', '..-.': 'F', '--.': 'G', '....': 'H',
+            '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L',
+            '--': 'M', '-.': 'N', '---': 'O', '.--.': 'P',
+            '--.-': 'Q', '.-.': 'R', '...': 'S', '-': 'T', 
+            '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X', 
+            '-.--': 'Y', '--..': 'Z', '/': ' '
+        }
+        let letters = code.split(' ')
+        for (let letter of letters) {
+            result += codes[letter]
+        }
+        return result
+    } else {
+        console.warn('The passed code needs to be a string. Enter "help" for informations.')
+    }
+}
+console.log(morseToText('-- --- .-. ... . / -.-. --- -.. .'))
+
+function cifraDeCesar(input, chave) {
+if (typeof input == 'string' && typeof chave == 'number' && String(chave) != 'NaN') {
+    let alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    let result = ''
+    chave > 0 ? chave -= 26*Math.floor(chave/26) : chave += 26*Math.floor(chave/26)
+    for (let letra of input.toUpperCase()) {
+        if (alfabeto.includes(letra)) {
+            let code = alfabeto.indexOf(letra)+chave
+            if (code <  0) {
+                code += 26
+            }
+            if (code > 25) {
+                code -= 26
+            }
+            result += alfabeto[code]
+            } else {result += letra}
+    }
+    return result
+    } else {
+        console.warn('Some value is not valid.')
+    }
+}
+console.log(cifraDeCesar('zebra', 47))
+
+function fat (n, msg = false) {
+    let primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+    let i = 0
+    let fatoration = []
+    let fatString = ''
+    n = Number(n)
+    if (n.toString() == 'NaN' || n <= 1) {
+        console.warn("Fatoration: The argument passed isn't a number or is already equal or less than 1.")
+        return
+    }
+    n = Math.floor(n)
+    while (n > 1){
+        if (n % primes[i] == 0) {
+            n /= primes[i]
+                fatoration.push(primes[i])
+        } else {
+            i++
+            if (!primes[i]) break
+        }
+    }
+    fatString = fatoration.join(', ')
+    if (n != 1) {
+        fatString += ', ...'
+        console.warn('Fatoration: The fatoration prime factors exceeded 100, it may be incomplete.')
+    }
+    if (msg) console.log(fatString)
+    return fatoration
+}
+fat(1297491407605575, true)
+
+function lookandSay1(chave, insts = 5) {
+    if (typeof chave == 'number' && String(chave) != 'NaN' && chave < 100
+    && String(insts) != 'NaN' && insts <= 10 && typeof insts == 'number'
+    && chave >= 0 && Math.floor(insts) > 0) {
+        chave = Math.floor(chave)
+        insts = Math.floor(insts)
+        chave = String(chave)
+        let result = []
+        for (let i = 0; i < insts; i++) {
+            let array = result.length == 0 ? chave.split('') : result[i-1].split('')
+            let number = ''
+            let sequence = 1
+            for (let index in array) {
+                let n = array[index]
+                if (n == array[Number(index)+1]){
+                    sequence++
+                } else {
+                    number += `${sequence}${n}`
+                    sequence = 1
+                }
+            }
+            result.push(number)
+        }
+        return result
+    } else {
+        console.warn("l&s_1: Some value isn't valid. Enter only numbers, key: 0 to 99; instances: 1 to 10.")
+    }
+}
+console.log(lookandSay1(3,7))
+
+function lookandSay2(chave, output = false){
+    if (typeof chave == 'number' && String(chave) != 'NaN' 
+    && chave <= 20 && chave >= 0) {
+        chave = String(Math.floor(chave))
+        let number = ''
+        let sequence = 0
+        let array = [chave]
+        let countin = true
+        let seguranca = 0
+        while (countin && seguranca <= 51){
+            let last = array[array.length-1].split('')
+            number = ''
+            for (let i = 0; i < 10; i++) {
+                for (let n of last) {
+                    if (n == i) sequence++
+                }
+                if (sequence != 0) {number += `${sequence}${i}`}
+                sequence = 0
+            }
+            if (number != array[array.length-1]) {
+                array.push(number)
+            } else {countin = false}
+            seguranca++
+        }
+        if (typeof output == 'boolean' && output) {
+            console.log(array)
+        }
+        return number
+    } else {
+        console.warn('l&s_2: The key is invalid. Enter only number, 0 to 20')
+    }
+} 
+console.log(lookandSay2(5, true))
+
+</script>
+<script src="drawBox.js"></script>
+</head>
+</html>

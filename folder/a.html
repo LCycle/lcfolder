@@ -1,0 +1,40 @@
+<html><body></body><head><script>
+let firstPos
+let lastPos
+let square
+window.addEventListener('mousedown', ({x, y})=>{firstPos = {x, y}})
+window.addEventListener('keydown', ({key})=>{
+	if (key == 'Enter' && square) {
+		square.style.backgroundColor = 'black'
+		square = undefined
+	}
+})
+window.addEventListener('mousemove', ({x, y, buttons, shiftKey})=>{
+	lastPos = {x, y}
+	if (buttons == 1) {
+		drawSqr()
+	}
+})
+function drawSqr() {
+	if (!square) {
+		square = document.createElement('span')
+		document.body.appendChild(square)
+	}
+	square.style.position = 'absolute'
+	square.style.backgroundColor = 'cyan'
+	if (firstPos.x < lastPos.x) {
+		square.style.left = firstPos.x
+		square.style.width = lastPos.x - firstPos.x
+	} else {
+		square.style.left = lastPos.x
+		square.style.width = firstPos.x - lastPos.x
+	}
+	if (firstPos.y < lastPos.y) {
+		square.style.top = firstPos.y
+		square.style.height = lastPos.y - firstPos.y
+	} else {
+		square.style.top = lastPos.y
+		square.style.height = firstPos.y - lastPos.y
+	}
+}
+</script></head></html>

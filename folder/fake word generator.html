@@ -1,0 +1,61 @@
+<html>
+<body>
+    <h1 id="h1">Click the button</h1>
+    <button id="button">Generate fake word</button>
+    <h2>Rules: <br/> The generator creates a fake word <br/> with 6 to 10 letters. The <br/> first one is random, the<br/>second one is a vowel or<br/> a consonant, depending on <br/>the previous one, and<br/> then it goes. The 3th,<br/>5th, 7th, and 10th ones<br/> are always vowels.</h2>
+</body>
+<head>
+    <title>Fake Word Generator</title>
+    <script>
+        let h1 = document.getElementById('h1')
+        let button = document.getElementById('button')
+        let vowels = ['a','e','i','o','u']
+        let consonants = ['b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z']
+        let noRorL = ['h','j','m','n','q','s','w','x']
+        let alfabet = [...vowels,...consonants]
+        button.addEventListener('click',() => {
+            let length = [6,7,8,9,10][Math.floor(Math.random()*5)]
+            let str = ''
+            for(let i = 1; i <= length; i++){
+                if(str.length !== 0){
+                    let last = str[str.length-1]
+                    if(str.length===2||str.length===4||str.length===6||str.length===9){
+                        let arr = [...vowels]
+                        if(arr.includes(last)){
+                            arr.splice(arr.indexOf(last),1)
+                        }
+                        str += arr[Math.floor(Math.random()*arr.length)]
+                    }else{
+                        if(vowels.includes(last)){
+                            str += consonants[Math.floor(Math.random()*21)]
+                        }
+                        if(consonants.includes(last)){
+                            if(noRorL.includes(last)){
+                                str += vowels[Math.floor(Math.random()*5)]
+                            }else{
+                                let arr = [...vowels]
+                                if(last!=='h'){arr.push('h')}
+                                if(last!=='r'&&last!=='l'){arr.push('r','l')}
+                                str += arr[Math.floor(Math.random()*arr.length)]
+                            }
+                        }
+                    }
+                }else{
+                    str += alfabet[Math.floor(Math.random()*26)]
+                }
+            }
+            h1.innerText = str
+        })
+    </script>
+    <style>
+        body{
+            background-color: grey;
+            text-align:center;
+        }
+        h1{
+            font-family: Arial, Helvetica, sans-serif;
+            color:white;
+        }
+    </style>
+</head>
+</html>

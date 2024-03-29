@@ -1,0 +1,255 @@
+<html>
+    <body>
+        <p>INSTRUÇÕES</br>Há uma sequência secreta de 4 cores. Use os botões no topo para descobrí-la. 
+Aperte 'Enter' para confirmar uma tentativa. Você tem 10 no total. Círculos brancos significam que
+alguma cor está no lugar errado, mas está no código. Já círculos pretos significam que alguma cor 
+está no código e no lugar certo. Cinzas significam que alguma cor não está no código. A ordem dessas
+cores é aleatória em relação à sequência colocada, então não irá saber qual cor está certa ou qual 
+não está.</br></br>Use 'Apagar' e 'Enter' no teclado ou os botões na tela</p>
+    </body>
+    <head>
+        <script>
+            const colors = [
+                'blue',
+                'yellow',
+                'orange',
+                'red',
+                'green',
+                'purple'
+            ]
+            const colorsPT = [
+                'AZUL',
+                'AMARELO',
+                'LARANJA',
+                'VERMELHO',
+                'VERDE',
+                'ROXO'
+            ]
+            let selectors = []
+            let buttons = []
+            let indicators = []
+            let answers = []
+
+            let currentIndex = 0
+            let index = 0
+            let backBtt = document.createElement('button')
+            let enterBtt = document.createElement('button')
+
+            let passCode = []
+            let passCodePT = []
+            for ( ;passCode.length != 4; ) {
+                let index = Math.floor(Math.random()*6)
+                let color = colors[index]
+                let colorPT = colorsPT[index]
+                if (!passCode.includes(color)) passCode.push(color)
+                if (!passCodePT.includes(colorPT)) passCodePT.push(colorPT)
+            }
+
+            backBtt.innerHTML = '<strong>Back</strong>'
+            backBtt.style.height = backBtt.style.width = enterBtt.style.height = enterBtt.style.width = innerWidth/20
+            backBtt.style.left = 3*innerWidth/5
+            backBtt.style.borderColor = backBtt.style.color = 'red'
+            document.body.appendChild(backBtt)
+            enterBtt.innerHTML = '<strong>Enter</strong>'
+            enterBtt.style.left = 13*innerWidth/20
+            enterBtt.style.borderColor = enterBtt.style.color = 'cyan'
+            document.body.appendChild(enterBtt)
+
+            function back() {
+                if (index > 0) index--
+                if (index == 0) backBtt.style.backgroundColor = 'grey'
+                enterBtt.style.backgroundColor = 'grey'
+                let color = indicators[index].style.backgroundColor
+                for (let button of buttons) {
+                    if (button.id == color) {
+                        button.style.backgroundColor = color
+                    }
+                }
+                indicators[index].style.backgroundColor = 'black'
+            }
+            function enter() {
+                if (index == 4) {
+                    currentIndex++
+                    let sequence = []
+                    let corrects = 0
+                    for (let bola of indicators) {
+                        sequence.push(bola.style.backgroundColor)
+                    }
+                    for (let i = 0; i < 4; i++) {
+                        let code = passCode[i]
+                        let cor = sequence[i]
+                        let bola = answers[Math.floor(Math.random()*answers.length)]
+                        if (code == cor) {
+                            bola.style.backgroundColor = 'black'
+                            corrects++
+                        } else if (passCode.includes(cor)) {
+                            bola.style.backgroundColor = 'white'
+                        }
+                        indicators.splice(0, 1)
+                        answers.splice(answers.indexOf(bola), 1)
+                    }
+                    if (corrects == 4) {
+                        let action = window.confirm(`Parabéns! Você Ganhou!
+Deseja jogar novamente?
+Clique "Cancelar" para fechar o jogo.`) // é assim mesmo
+                        if (action) {
+                            document.location.reload()
+                        } else {
+                            window.close()
+                        }
+                        return // so pra ter ctz
+                    }
+                    nextLine()
+                }
+            }
+            backBtt.addEventListener('click', back)
+            enterBtt.addEventListener('click', enter)
+            document.onkeydown = ({key}) => {
+                switch (key) {
+                    case 'Backspace':
+                        back()
+                        break
+                    case 'Enter':
+                        enter()
+                }
+            }
+
+            function nextLine() {
+                if (currentIndex == 10) {
+                    let action = window.confirm(`Ops, acabaram suas tentativas! Você Perdeu!
+A sequência correta era: ${passCodePT.join(', ')}
+Deseja jogar novamente?
+Clique "Cancelar" para fechar o jogo.`) // n muda, assim mesmo
+                    if (action) {
+                        document.location.reload()
+                    } else {
+                        window.close()
+                    }
+                    return // so ctz
+                }
+
+                selectors[currentIndex].indicator.style.backgroundColor = 'rgb(100,25,10)'
+                selectors[currentIndex].input.style.backgroundColor = 'rgb(180,70,20)'
+                indicators.push(...selectors[currentIndex].indicators)
+                answers.push(...selectors[currentIndex].answers)
+                for (let indicator of indicators) {indicator.style.display = ''}
+                for (let answer of answers) {answer.style.display = ''}
+
+                backBtt.style.top = enterBtt.style.top = innerWidth/8+currentIndex*innerWidth/10
+                backBtt.style.backgroundColor = enterBtt.style.backgroundColor = 'grey'
+                for (let button of buttons) {button.style.backgroundColor = button.id}
+                index = 0
+            }
+
+            //linhas
+            for (let i = 0; i < 10; i++) {
+                let indicator = document.createElement('span')
+                let input = document.createElement('span')
+                let number = document.createElement('h1')
+                number.style.fontSize = '60px'
+                number.style.left = innerWidth/4
+                number.style.top = (i+1)*innerWidth/10
+                number.innerHTML = i+1
+                document.body.appendChild(number)
+                document.body.appendChild(indicator)
+                document.body.appendChild(input)
+                indicator.style.height = indicator.style.width = input.style.height = innerWidth/10
+                indicator.style.backgroundColor = 'rgb(50,5,0)'
+                indicator.style.borderRadius = '15%'
+                indicator.style.top = input.style.top = innerWidth/10*(i+1)
+                indicator.style.position = input.style.position = 'absolute'
+                indicator.style.left = 3*innerWidth/10
+                input.style.width = innerWidth/5
+                input.style.backgroundColor = 'rgb(100,40,00)'
+                input.style.left = 2*innerWidth/5 // 3/10 + 1/10
+                input.style.borderRadius = '12%'
+                selectors.push({indicator,input, indicators: [], answers: []})
+                for (let fileira = 0; fileira < 2; fileira++) {
+                    for (let coluna = 0; coluna < 2; coluna++) {
+                        let bolinha = document.createElement('span')
+                        bolinha.style.height = bolinha.style.width = innerWidth/30
+                        bolinha.style.left = 19*innerWidth/60+coluna*innerWidth/30
+                        bolinha.style.top = 7*innerWidth/60+fileira*innerWidth/30+i*innerWidth/10
+                        bolinha.style.backgroundColor = 'grey'
+                        bolinha.style.position = 'absolute'
+                        bolinha.style.borderRadius = '50%'
+                        bolinha.style.display = 'none'
+                        document.body.appendChild(bolinha)
+                        selectors[i].answers.push(bolinha)
+                    }
+                }
+                for(let circulo = 0; circulo < 4; circulo++) {
+                    let bola = document.createElement('span')
+                    bola.style.height = bola.style.width = innerWidth/30
+                    bola.style.top = innerWidth/30+(i+1)*innerWidth/10
+                    bola.style.left = 13*innerWidth/30+circulo*innerWidth/30
+                    bola.style.position = 'absolute'
+                    bola.style.backgroundColor = 'black'
+                    bola.style.borderRadius = '50%'
+                    bola.style.display = 'none'
+                    document.body.appendChild(bola)
+                    selectors[i].indicators.push(bola)
+                }
+            }
+            nextLine()
+
+            //botoes
+            let buttonBackground = document.createElement('span')
+            buttonBackground.style.backgroundColor = 'rgb(150, 250, 255)'
+            buttonBackground.style.height = innerWidth/20
+            buttonBackground.style.left = 11*innerWidth/40
+            buttonBackground.style.width = 7*innerWidth/20
+            buttonBackground.style.borderRadius = '15%'
+            buttonBackground.style.position = 'fixed'
+            document.body.appendChild(buttonBackground)
+            for (let i in colors) {
+                let button = document.createElement('span')
+                document.body.appendChild(button)
+                button.style.backgroundColor = colors[i]
+                button.id = colors[i]
+                button.style.left = 3*innerWidth/10+i*innerWidth/20
+                button.style.height = button.style.width = innerWidth/20
+                button.style.position = 'fixed'
+                button.style.borderRadius = '50%'
+                button.style.border
+                button.addEventListener('click', ()=>{
+                    if (index == 4 || button.style.backgroundColor == 'grey') {
+                        return
+                    }
+                    backBtt.style.backgroundColor = 'white'
+                    let bola = indicators[index]
+                    bola.style.backgroundColor = colors[i]
+                    button.style.backgroundColor = 'grey'
+                    if (index < 4) index++
+                    if (index == 4) enterBtt.style.backgroundColor = 'white'
+                })
+                buttons.push(button)
+            }
+        </script>
+        <style>
+            body {
+                margin: 0;
+                background-color: rgb(126, 223, 236);
+            }
+            span {
+                display: inline-block;
+            }
+            button {
+                position: absolute;
+                border-radius: 25%;
+            }
+            h1{
+                color:white;
+                font-family: Arial, Helvetica, sans-serif;
+                position: absolute
+            }
+            p{
+                font-family: Arial, Helvetica, sans-serif;
+                position: absolute;
+                left: 80%;
+                text-align: right;
+            }
+        </style>
+        <title>Jogo da Senha</title>
+    </head>
+</html>

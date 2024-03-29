@@ -1,0 +1,33 @@
+<html>
+    <body>
+        <span id="fds"></span>
+    </body>
+    <head>
+        <style>
+            h1{
+                font: Arial;
+            }
+            body{
+                background-color: rgb(255, 140, 140);
+            }
+            span{
+                background-color: white;
+                height: 200px;
+                width: 200px;
+                position:absolute;
+                border-radius: 50%;
+            }
+        </style>
+        <script>
+            let porrinha = document.getElementById('fds')
+            porrinha.addEventListener('click',() => {
+                porrinha.style.display = porrinha.style.display == '' ? 'none' : ''
+                console.log('vugnaes sreo')
+            })
+            document.onkeydown = function ({key}) {
+                console.log(key)
+            }
+        </script>
+        <title> porra caralho viadagem</title>
+    </head>
+</html>

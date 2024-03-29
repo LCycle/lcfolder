@@ -1,0 +1,57 @@
+<html>
+    <body></body>
+    <head>
+        <script>
+            const fontSize = 70
+            let h1Arr = []
+            let lastH1
+            document.addEventListener('keydown',({key})=>{
+                if (key == 'Backspace') {
+                    let arr = [...lastH1.innerHTML]
+                    arr.pop()
+                    lastH1.innerHTML = arr.join('')
+                } else if (key == 'Enter') {
+                    enter()
+                } else if (key.length == 1) {
+                    lastH1.innerHTML += key
+                }
+            })
+            function enter() {
+                h1Arr.push(lastH1)
+                console.log(innerHeight, innerWidth)
+                downH1()
+                for (let h1 of h1Arr) {
+                    h1.style.top = Number(h1.style.top.replace('px',''))+60*(-1)+'px'
+                }
+            }
+            function downH1() {
+                if (h1Arr.length !== 0) {
+                    for (let h1 of h1Arr) {
+                        if (Number(h1.style.top.replace('px','')) + fontSize < 0) {
+                            h1.style.top = innerHeight+'px'
+                            h1.innerHTML = '> '
+                            lastH1 = h1
+                            return
+                        }
+                    }
+                }
+                lastH1 = document.createElement('h1')
+                document.body.appendChild(lastH1)
+                lastH1.innerHTML = '> '
+                lastH1.style.top = innerHeight+'px'
+                lastH1.style.fontSize = fontSize
+            }
+            downH1()
+        </script>
+        <style>
+            h1 {
+                position: absolute;
+                color: white;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            body {
+                background-color: black;
+            }
+        </style>
+    </head>
+</html>

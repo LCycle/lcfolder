@@ -1,0 +1,72 @@
+<html>
+    <body></body>
+    <head>
+        <title>Bouncing Balls</title>
+        <script>
+            const colors = [
+                'red',
+                'orange',
+                'yellow',
+                'lime',
+                'green',
+                'cyan',
+                'blue',
+                'purple'
+            ]
+            const ballsCount = 10
+            const ballSize = 50
+            const gravity = ballSize/10
+            let ballsArr = []
+            class Ball {
+                constructor(color) {
+                    this.x
+                    this.y
+                    this.velocity = {
+                        y: gravity,
+                        x: undefined
+                    }
+                    this.relocate()
+                    this.style = {
+                        backgroundColor: color,
+                        borderRadius: '50%',
+                        display: 'inline-block',
+                        position: 'absolute',
+                        width: ballSize,
+                        height: ballSize,
+                        left: this.x,
+                        top: this.y
+                    }
+                    this.circle = document.createElement('span')
+                    document.body.appendChild(this.circle)
+                    for (let sty in this.style) {
+                        this.circle.style[sty] = this.style[sty]
+                    }
+                }
+                relocate() {
+                    this.x = innerWidth
+                    this.y = Math.floor(Math.random()*(innerHeight/2))+innerHeight/2
+                    this.velocity.x = Math.floor(Math.random()*ballSize/2)+ballSize/5
+                }
+            }
+            for (let i = 0; i < ballsCount; i++) {
+                let color = colors[i % colors.length]
+                let ball = new Ball(color)
+                ball.relocate()
+                ballsArr.push(ball)
+            }
+            let update = () => {
+                for (let ball of ballsArr) {
+                    ball.x -= ball.velocity.x
+                    ball.y += ball.velocity.y
+                    if (ball.velocity.y < ballSize) {ball.velocity.y += gravity}
+                    if (ball.x + ballSize <= 0) {ball.relocate()}
+                    if (ball.y + ballSize >= innerHeight) {ball.velocity.y = -ballSize}
+                    ball.circle.style.left = ball.x
+                    ball.circle.style.top = ball.y
+                }
+                requestAnimationFrame(update)
+            }
+            update()
+        </script>
+    </head>
+</html>

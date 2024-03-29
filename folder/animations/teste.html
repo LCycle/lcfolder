@@ -1,0 +1,62 @@
+<html>
+    <body></body>
+    <head>
+        <script>
+            const inch = Math.floor(innerWidth/50)
+            const colors = [
+                'red',
+                'orange',
+                'yellow',
+                'lime',
+                'green',
+                'cyan',
+                'blue',
+                'purple'
+            ]
+            const circlesMaxCount = 10
+            let circleArr = []
+            let lastColor = colors[Math.floor(Math.random()*colors.length)]
+            document.body.style.backgroundColor = lastColor
+            let update = setInterval(() => {
+                let circle = createCircle()
+                circleArr.push(circle)
+                animate(circle)
+            },250)
+            function createCircle() {
+                let circle = document.createElement('span')
+                document.body.appendChild(circle)
+                circleStyle(circle)
+                return circle
+            }
+            function circleStyle(clr) {
+                clr.style.width = clr.style.height = '0px'
+                clr.style.left = innerWidth/2
+                clr.style.top = innerHeight/2
+                let color = colors[Math.floor(Math.random()*colors.length)]
+                for (;color == lastColor;) {
+                    color = colors[Math.floor(Math.random()*colors.length)]
+                }
+                clr.style.backgroundColor = color
+                lastColor = color
+            }
+            function animate(clr) {
+                let animation = setInterval(() => {
+                    clr.style.width = Number(clr.style.width.replace('px',''))+inch
+                    clr.style.height = Number(clr.style.height.replace('px',''))+inch
+                    clr.style.left = Number(clr.style.left.replace('px',''))-inch/2
+                    clr.style.top = Number(clr.style.top.replace('px',''))-inch/2
+                }, 10);
+                setTimeout(() => {clearInterval(animation)},1000)
+            }
+        </script>
+        <style>
+            span {
+                position: absolute;
+                display: inline-block;
+                border-radius: 50%;
+                width: 0px;
+                height: 0px;
+            }
+        </style>
+    </head>
+</html>

@@ -1,0 +1,53 @@
+<html>
+    <body>
+        <canvas id="canvas"></canvas>
+    </body>
+    <head>
+        <script>
+            const canvas = document.getElementById('canvas')
+            const ctx = canvas.getContext('2d')
+            const maxParticleCount = 50
+            const particleSize = 20
+            let particleArr = []
+            canvas.width = innerWidth
+            canvas.height = innerHeight
+            class Particle {
+                constructor(x, y) {
+                    this.x = x
+                    this.y = y
+                    this.velocity = Math.floor(Math.random()*particleSize/2)+particleSize/3
+                    this.color = 'rgb(200,255,100)'
+                }
+                draw() {
+                    ctx.fillStyle = this.color
+                    ctx.fillRect(this.x, this.y, particleSize, particleSize)
+                    this.x += this.velocity
+                    console.log(this.velocity)
+                    if (this.x >= innerWidth) {
+                        this.y = Math.floor(Math.random()*(innerHeight/particleSize))*Math.floor(innerHeight/particleSize)
+                        this.velocity = Math.floor(Math.random()*particleSize/2)+particleSize/2
+                        this.x = 0
+                    }
+                }
+            }
+            for (let i = 0; i < maxParticleCount; i++) {
+                let particle = new Particle(0, Math.floor(Math.random()*(innerHeight/particleSize))*Math.floor(innerHeight/particleSize))
+                particleArr.push(particle)
+            }
+            let update = () => {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.45)'
+                ctx.fillRect(0, 0, innerWidth, innerHeight)
+                for (let prtcl of particleArr) {
+                    prtcl.draw()
+                }
+                requestAnimationFrame(update)
+            }
+            update()
+        </script>
+        <style>
+            body {
+                margin: 0;
+            }
+        </style>
+    </head>
+</html>

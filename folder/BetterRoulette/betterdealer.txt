@@ -1,0 +1,16 @@
+como o dealer funciona no JOGO:
+
+- a cada vez dele, ele escolhe aleatoriamente atirar no jogador ou nele mesmo, a não ser que
+- seja a ultima bala, então ele age como se soubesse, da seguinte forma:
+	- sendo verdadeira, ele ira atirar no jogador
+	- sendo falsa, ele atira em si mesmo
+- ele usa seus itens >assim que possivel<*, na >ordem que ele retira<
+*	- ele so usa a serra se for atirar no jogador
+	- ele nao usa o cigarro se sua vida estiver cheia nem usa a lupa se ja souber a bala na camara (ou pensar que sabe)
+		- se ele usar a lupa e depois beber cerveja, ele ainda acha que a bala que ele viu é a bala atual
+
+--> problemas <--
+
+- ele so escolhe em quem atirar aleatoriamente, sempre 50/50, mas nem sempre é assim, ele poderia contabilizar a proporção entre verdadeiras e falsas para calcular probabilidade
+- usando todos os itens assim que possivel, pode ser que ele desperdisse alguma coisa, um exemplo disso é quando ele sabe que a bala é falsa e, ao inves de atirar em si mesmo, bebe uma cerveja e gasta ela. se ele souber a bala porque usou uma lupa, é ainda pior, porque se não for a ultima a proxima pode ser verdadeira, mas ele ainda vai atirar em si mesmo, pensando que é falsa, e vai acabar morrendo (a não ser que a verdadeira seja a ultima)
+- pelo amor de deus, jorge e matheus, consertar o bug da lupa e cerveja
